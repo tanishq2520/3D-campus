@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import './CampusMap.css';
 
@@ -23,6 +24,7 @@ const BUILDINGS_DATA = [
 
 export default function CampusMap({ onBuildingClick }) {
   const [tooltip, setTooltip] = useState({ show: false, text: '', x: 0, y: 0 });
+  const navigate = useNavigate();
 
   const containerRef = useRef(null);
 
@@ -43,6 +45,7 @@ export default function CampusMap({ onBuildingClick }) {
 
   return (
     <div className="campus-map-fullscreen" ref={containerRef} onMouseMove={handleMouseMove}>
+      <button className="map-back-button" onClick={() => navigate('/')}>← Home</button>
       
       <img 
         src="/map.jpeg" 
