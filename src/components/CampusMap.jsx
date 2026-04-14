@@ -23,51 +23,9 @@ const BUILDINGS_DATA = [
 
 export default function CampusMap({ onBuildingClick }) {
   const [tooltip, setTooltip] = useState({ show: false, text: '', x: 0, y: 0 });
-  const [overlayStyle, setOverlayStyle] = useState({ width: '100%', height: '100%' });
 
   const containerRef = useRef(null);
-  const imgRef = useRef(null);
 
-  useEffect(() => {
-    if (!containerRef.current || !imgRef.current) return;
-
-    const calculateSizes = () => {
-      const img = imgRef.current;
-      if (!img.naturalWidth) return;
-
-      const imgRatio = img.naturalWidth / img.naturalHeight;
-      const containerW = containerRef.current.clientWidth;
-      const containerH = containerRef.current.clientHeight;
-      const containerRatio = containerW / containerH;
-
-      let renderW, renderH;
-
-      if (imgRatio > containerRatio) {
-        renderW = containerW;
-        renderH = containerW / imgRatio;
-      } else {
-        renderH = containerH;
-        renderW = containerH * imgRatio;
-      }
-
-      setOverlayStyle({
-        width: `${renderW}px`,
-        height: `${renderH}px`
-      });
-    };
-
-    const observer = new ResizeObserver(() => {
-      calculateSizes();
-    });
-
-    observer.observe(containerRef.current);
-    imgRef.current.addEventListener('load', calculateSizes);
-
-    return () => {
-      observer.disconnect();
-      if (imgRef.current) imgRef.current.removeEventListener('load', calculateSizes);
-    };
-  }, []);
 
   const handleMouseMove = (e) => {
     if (tooltip.show) {
@@ -87,7 +45,6 @@ export default function CampusMap({ onBuildingClick }) {
     <div className="campus-map-fullscreen" ref={containerRef} onMouseMove={handleMouseMove}>
       
       <img 
-        ref={imgRef}
         src="/map.jpeg" 
         alt="Campus Map" 
         className="map-image-core" 
@@ -95,7 +52,6 @@ export default function CampusMap({ onBuildingClick }) {
 
       <div 
         className="map-shared-container" 
-        style={{ width: overlayStyle.width, height: overlayStyle.height }}
       >
         <svg className="map-svg-overlay" viewBox="0 0 100 100" preserveAspectRatio="none">
           {BUILDINGS_DATA.map((b, index) => (

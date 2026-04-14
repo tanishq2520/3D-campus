@@ -1,15 +1,11 @@
 .campus-map-fullscreen {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #0d1117;
-  /* optional background behind letterbox */
+  width: 380px;
+  height: 380px;
+  border-radius: 16px;
   overflow: hidden;
   position: relative;
-  perspective: 1000px;
-  transform-style: preserve-3d;
+  z-index: 2;
+  box-shadow: 0 0 40px rgba(0, 245, 196, 0.2);
 }
 
 .map-image-core {
@@ -18,18 +14,18 @@
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  max-width: 100%;
-  max-height: 100vh;
+  object-fit: fill;
   display: block;
   pointer-events: none;
-  /* Subordinate pointer logic to SVG layer */
   z-index: 1;
 }
 
 .map-shared-container {
-  position: relative;
-  /* Dimension bound strictly by mathematical inline React ResizeObserver rules */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   z-index: 2;
 }
 
@@ -39,19 +35,14 @@
   left: 0;
   width: 100%;
   height: 100%;
-  overflow: visible;
-  /* Ensure glowing drop-shadow boundaries aren't clipped */
+  overflow: hidden;
 }
 
-/* User exact specifications for SVG geometry styles */
 .svg-hotspot {
   fill: transparent;
   stroke: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  transform: translateZ(20px);
-  transform-style: preserve-3d;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
 }
 
 .svg-hotspot:hover {
@@ -59,18 +50,6 @@
   stroke: rgb(0, 245, 196);
   stroke-width: 0.5;
   filter: drop-shadow(0 0 8px rgba(0, 245, 196, 0.6));
-}
-
-.svg-hotspot::after {
-  position: absolute;
-  content: '';
-  bottom: -10px;
-  left: 0;
-  width: 100%;
-  height: 10px;
-  background: rgba(0, 0, 0, 0.4);
-  transform: rotateX(-90deg);
-  transform-origin: top;
 }
 
 .svg-tooltip {
@@ -83,5 +62,4 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 12px;
   pointer-events: none;
-  /* Left/top positioned inline */
 }

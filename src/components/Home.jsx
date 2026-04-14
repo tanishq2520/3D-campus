@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import CampusMap from './CampusMap';
+import './Home.css';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -11,7 +12,15 @@ export default function Home() {
 
   return (
     <div className="landing-wrapper">
-      <CampusMap onBuildingClick={handleBuildingClick} />
+      <div className="left-panel">
+        <div className="ring-wrapper">
+          <div className="ring ring-1"></div>
+          <div className="ring ring-2"></div>
+          <div className="ring ring-3"></div>
+          <div className="ring ring-4"></div>
+          <CampusMap onBuildingClick={handleBuildingClick} />
+        </div>
+      </div>
       <div className="right-panel">
         <h1>Geeta University</h1>
         <h3>Digital Twin Experience</h3>
