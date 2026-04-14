@@ -1,12 +1,74 @@
-import React, { useState } from 'react';
-import { buildingsData } from '../data/buildingsData';
+import React, { useState, useEffect, useRef } from 'react';
 import './CampusMap.css';
+
+const BUILDINGS_DATA = [
+  { id:"admin-block",  label:"Admin Block",       glb:"Admin_block.glb", x:46.4, y:14.7, w:6.9,  h:6.1 },
+  { id:"f-block",      label:"F Block",            glb:"F_block.glb",     x:37,   y:14.6, w:6.2,  h:6.7 },
+  { id:"c-block",      label:"C Block",            glb:"C_block.glb",     x:48.6, y:25.1, w:9.6,  h:3.5 },
+  { id:"a-block",      label:"A Block",            glb:"A_block.glb",     x:47.6, y:30.9, w:3.7,  h:6.5 },
+  { id:"b-block",      label:"B Block",            glb:"B_block.glb",     x:53.9, y:30.2, w:3.5,  h:6.6 },
+  { id:"incubation",   label:"Incubation Center",  glb:"incubation.glb",  x:37.2, y:23.2, w:5.5,  h:8   },
+  { id:"cafeteria",    label:"Cafeteria",           glb:"Cafeteria.glb",   x:35.6, y:32.6, w:7.3,  h:5.1 },
+  { id:"d-block",      label:"D Block",             glb:"D_block.glb",     x:35.7, y:40,   w:6.9,  h:5.1 },
+  { id:"dsw",          label:"DSW",                 glb:"dsw.glb",         x:47.2, y:40.9, w:13.4, h:6.1 },
+  { id:"hostel",       label:"Hostel Block",        glb:"B_hostel.glb",    x:70.4, y:15.1, w:7.3,  h:2   },
+  { id:"hostel",       label:"Hostel Block",        glb:"B_hostel.glb",    x:65.9, y:31,   w:3.1,  h:5.2 },
+  { id:"hostel",       label:"Hostel Block",        glb:"B_hostel.glb",    x:74.8, y:31.8, w:3,    h:5   },
+  { id:"hostel",       label:"Hostel Block",        glb:"B_hostel.glb",    x:70.4, y:31.1, w:3,    h:4.8 },
+  { id:"hostel",       label:"Hostel Block",        glb:"B_hostel.glb",    x:70.2, y:18.4, w:7.5,  h:2.1 },
+  { id:"hostel",       label:"Hostel Block",        glb:"B_hostel.glb",    x:73.7, y:39.9, w:3.1,  h:6.6 },
+  { id:"hostel",       label:"Hostel Block",        glb:"B_hostel.glb",    x:65.2, y:40.5, w:2.8,  h:6.9 },
+];
 
 export default function CampusMap({ onBuildingClick }) {
   const [tooltip, setTooltip] = useState({ show: false, text: '', x: 0, y: 0 });
+  const [overlayStyle, setOverlayStyle] = useState({ width: '100%', height: '100%' });
+
+  const containerRef = useRef(null);
+  const imgRef = useRef(null);
+
+  useEffect(() => {
+    if (!containerRef.current || !imgRef.current) return;
+
+    const calculateSizes = () => {
+      const img = imgRef.current;
+      if (!img.naturalWidth) return;
+
+      const imgRatio = img.naturalWidth / img.naturalHeight;
+      const containerW = containerRef.current.clientWidth;
+      const containerH = containerRef.current.clientHeight;
+      const containerRatio = containerW / containerH;
+
+      let renderW, renderH;
+
+      if (imgRatio > containerRatio) {
+        renderW = containerW;
+        renderH = containerW / imgRatio;
+      } else {
+        renderH = containerH;
+        renderW = containerH * imgRatio;
+      }
+
+      setOverlayStyle({
+        width: `${renderW}px`,
+        height: `${renderH}px`
+      });
+    };
+
+    const observer = new ResizeObserver(() => {
+      calculateSizes();
+    });
+
+    observer.observe(containerRef.current);
+    imgRef.current.addEventListener('load', calculateSizes);
+
+    return () => {
+      observer.disconnect();
+      if (imgRef.current) imgRef.current.removeEventListener('load', calculateSizes);
+    };
+  }, []);
 
   const handleMouseMove = (e) => {
-    // Only update position if tooltip is showing to avoid unnecessary re-renders
     if (tooltip.show) {
       setTooltip(prev => ({ ...prev, x: e.clientX, y: e.clientY }));
     }
@@ -21,15 +83,23 @@ export default function CampusMap({ onBuildingClick }) {
   };
 
   return (
-    <div className="campus-map-fullscreen" onMouseMove={handleMouseMove}>
-      <div className="campus-map-image-wrapper">
-        <img src="/map.jpeg" alt="Campus Map" className="map-image-contain" />
-        <div className="map-overlay-dark"></div>
-        
+    <div className="campus-map-fullscreen" ref={containerRef} onMouseMove={handleMouseMove}>
+      
+      <img 
+        ref={imgRef}
+        src="/map.jpeg" 
+        alt="Campus Map" 
+        className="map-image-core" 
+      />
+
+      <div 
+        className="map-shared-container" 
+        style={{ width: overlayStyle.width, height: overlayStyle.height }}
+      >
         <svg className="map-svg-overlay" viewBox="0 0 100 100" preserveAspectRatio="none">
-          {buildingsData.map((b) => (
+          {BUILDINGS_DATA.map((b, index) => (
             <rect
-              key={b.id}
+              key={index}
               x={b.x}
               y={b.y}
               width={b.w}
@@ -37,7 +107,7 @@ export default function CampusMap({ onBuildingClick }) {
               className="svg-hotspot"
               onMouseEnter={(e) => handleMouseEnter(e, b.label)}
               onMouseLeave={handleMouseLeave}
-              onClick={() => onBuildingClick({ id: b.id, label: b.label, glb: b.glbFile })}
+              onClick={() => onBuildingClick({ id: b.id, label: b.label, glb: b.glb })}
             />
           ))}
         </svg>

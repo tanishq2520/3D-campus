@@ -1,5 +1,5 @@
 export const buildingsData = [
-  { id: "admin-block", label: "Admin Block", x:43, y:12, w:11, h:9, glbFile: "/admin_block.glb", floors: 4, rooms: 100, labs: 2, dean: "Dr. Smith", description: "The central hub for administrative operations." },
+  { id: "admin-block", label: "Admin Block", x:43, y:12, w:11, h:9, glbFile: "/Admin_block.glb", floors: 4, rooms: 100, labs: 2, dean: "Dr. Smith", description: "The central hub for administrative operations." },
   { id: "f-block", label: "F Block", x:35, y:14, w:8, h:11, glbFile: "/F_block.glb", floors: 3, rooms: 80, labs: 4, dean: "Dr. Johnson", description: "Primary building for Mechanical & Civil Engineering." },
   { id: "c-block", label: "C Block", x:43, y:24, w:9, h:9, glbFile: "/C_block.glb", floors: 4, rooms: 120, labs: 12, dean: "Dr. Williams", description: "Computer Science block." },
   { id: "a-block", label: "A Block", x:38, y:33, w:7, h:8, glbFile: "/A_block.glb", floors: 5, rooms: 60, labs: 5, dean: "Dr. Dave", description: "Main academic building." },

@@ -2,6 +2,7 @@ import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './components/Home'
 import BuildingViewer from './components/BuildingViewer'
+import CoordinatePicker from './components/CoordinatePicker'
 import './index.css'
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/building/:id" element={<BuildingViewer />} />
+        <Route path="/picker" element={<CoordinatePicker />} />
       </Routes>
     </BrowserRouter>
   )
