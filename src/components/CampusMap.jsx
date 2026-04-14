@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
 import './CampusMap.css';
 
 const BUILDINGS_DATA = [
@@ -105,8 +106,14 @@ export default function CampusMap({ onBuildingClick }) {
               width={b.w}
               height={b.h}
               className="svg-hotspot"
-              onMouseEnter={(e) => handleMouseEnter(e, b.label)}
-              onMouseLeave={handleMouseLeave}
+              onMouseEnter={(e) => {
+                handleMouseEnter(e, b.label);
+                gsap.to(e.target, { z: 35, duration: 0.3, ease: 'power2.out' });
+              }}
+              onMouseLeave={(e) => {
+                handleMouseLeave();
+                gsap.to(e.target, { z: 20, duration: 0.3 });
+              }}
               onClick={() => onBuildingClick({ id: b.id, label: b.label, glb: b.glb })}
             />
           ))}

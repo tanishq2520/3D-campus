@@ -10,6 +10,13 @@ export default function Home() {
   };
 
   return (
-    <CampusMap onBuildingClick={handleBuildingClick} />
+    <div className="landing-wrapper">
+      <CampusMap onBuildingClick={handleBuildingClick} />
+      <div className="right-panel">
+        <h1>Geeta University</h1>
+        <h3>Digital Twin Experience</h3>
+        <p>Explore the campus in 3D. Click any building on the map to view its model.</p>
+      </div>
+    </div>
   );
 }
