@@ -1,0 +1,92 @@
+{
+  "c-block": {
+    "name": "C Block",
+    "glbFile": "/C_block.glb",
+    "floors": 4,
+    "dean": "Dr. Smith",
+    "description": "Main administrative and CS Block.",
+    "x": "40%",
+    "y": "25%"
+  },
+  "admin-block": {
+    "name": "Admin Block",
+    "glbFile": "/admin.glb",
+    "floors": 4,
+    "dean": "Dr. Smith",
+    "description": "The central hub for administrative operations.",
+    "x": "50%",
+    "y": "20%"
+  },
+  "f-block": {
+    "name": "F Block",
+    "glbFile": "/f-block.glb",
+    "floors": 3,
+    "dean": "Dr. Johnson",
+    "description": "Primary building for Mechanical and Civil Engineering.",
+    "x": "60%",
+    "y": "35%"
+  },
+  "d-block": {
+    "name": "D Block",
+    "glbFile": "/d-block.glb",
+    "floors": 2,
+    "dean": "Dr. Brown",
+    "description": "Arts & Humanities space.",
+    "x": "40%",
+    "y": "35%"
+  },
+  "a-block": {
+    "name": "A Block",
+    "glbFile": "/a-block.glb",
+    "floors": 5,
+    "dean": "Dr. Williams",
+    "description": "Main academic building and classrooms.",
+    "x": "30%",
+    "y": "50%"
+  },
+  "b-block": {
+    "name": "B Block",
+    "glbFile": "/b-block.glb",
+    "floors": 4,
+    "dean": "Dr. Davies",
+    "description": "Science and research labs.",
+    "x": "70%",
+    "y": "50%"
+  },
+  "dsw": {
+    "name": "DSW",
+    "glbFile": "/dsw.glb",
+    "floors": 2,
+    "dean": "Prof. Evans",
+    "description": "Department of Student Welfare.",
+    "x": "50%",
+    "y": "60%"
+  },
+  "cafeteria": {
+    "name": "Cafeteria",
+    "glbFile": "/cafeteria.glb",
+    "floors": 1,
+    "dean": "Chef Mario",
+    "description": "The main student dining hall.",
+    "x": "80%",
+    "y": "70%"
+  },
+  "hostel": {
+    "name": "Hostel",
+    "glbFile": "/hostel.glb",
+    "floors": 8,
+    "dean": "Warden Green",
+    "description": "Student Accommodation facilities.",
+    "x": "20%",
+    "y": "70%"
+  },
+  "incubation": {
+    "name": "Incubation",
+    "glbFile": "/incubation.glb",
+    "floors": 3,
+    "dean": "Dr. Tech",
+    "description": "Startup Incubation Center.",
+    "x": "50%",
+    "y": "80%"
+  }
+}
