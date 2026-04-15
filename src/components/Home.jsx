@@ -3,18 +3,22 @@ import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
 const BUILDINGS = [
-  { id: 'admin-block', label: 'Admin Block',      x: 46, y: 14, w: 7,  h: 6 },
-  { id: 'f-block',     label: 'F Block',           x: 37, y: 14, w: 6,  h: 7 },
-  { id: 'c-block',     label: 'C Block',           x: 48, y: 25, w: 10, h: 4 },
-  { id: 'a-block',     label: 'A Block',           x: 47, y: 30, w: 4,  h: 7 },
-  { id: 'b-block',     label: 'B Block',           x: 53, y: 30, w: 4,  h: 7 },
-  { id: 'incubation',  label: 'Incubation Center', x: 37, y: 23, w: 6,  h: 8 },
-  { id: 'cafeteria',   label: 'Cafeteria',         x: 35, y: 32, w: 7,  h: 5 },
-  { id: 'd-block',     label: 'D Block',           x: 35, y: 40, w: 7,  h: 5 },
-  { id: 'dsw',         label: 'DSW',               x: 47, y: 40, w: 13, h: 6 },
-  { id: 'hostel-1',      label: 'Hostel Block',      x: 70, y: 15, w: 7,  h: 2 },
-  { id: 'hostel-2',      label: 'Hostel Block',      x: 65, y: 31, w: 3,  h: 5 },
-  { id: 'hostel-3',      label: 'Hostel Block',      x: 74, y: 31, w: 3,  h: 5 },
+  { id: 'admin-block', label: 'Admin Block', x: 46.4, y: 14.7, w: 6.9, h: 6.1 },
+  { id: 'f-block', label: 'F Block', x: 37, y: 14.6, w: 6.2, h: 6.7 },
+  { id: 'c-block', label: 'C Block', x: 48.6, y: 25.1, w: 9.6, h: 3.5 },
+  { id: 'a-block', label: 'A Block', x: 47.6, y: 30.9, w: 3.7, h: 6.5 },
+  { id: 'b-block', label: 'B Block', x: 53.9, y: 30.2, w: 3.5, h: 6.6 },
+  { id: 'incubation', label: 'Incubation Center', x: 37.2, y: 23.2, w: 5.5, h: 8 },
+  { id: 'cafeteria', label: 'Cafeteria', x: 35.6, y: 32.6, w: 7.3, h: 5.1 },
+  { id: 'd-block', label: 'D Block', x: 35.7, y: 40, w: 6.9, h: 5.1 },
+  { id: 'dsw', label: 'DSW', x: 47.2, y: 40.9, w: 13.4, h: 6.1 },
+  { id: 'hostel', label: 'Hostel Block', x: 70.4, y: 15.1, w: 7.3, h: 2 },
+  { id: 'hostel', label: 'Hostel Block', x: 65.9, y: 31, w: 3.1, h: 5.2 },
+  { id: 'hostel', label: 'Hostel Block', x: 74.8, y: 31.8, w: 3, h: 5 },
+  { id: 'hostel', label: 'Hostel Block', x: 70.4, y: 31.1, w: 3, h: 4.8 },
+  { id: 'hostel', label: 'Hostel Block', x: 70.2, y: 18.4, w: 7.5, h: 2.1 },
+  { id: 'hostel', label: 'Hostel Block', x: 73.7, y: 39.9, w: 3.1, h: 6.6 },
+  { id: 'hostel', label: 'Hostel Block', x: 65.2, y: 40.5, w: 2.8, h: 6.9 },
 ];
 
 export default function Home() {
@@ -63,7 +67,7 @@ export default function Home() {
           <div
             ref={mapRef}
             className={`map-wrapper${zoomed ? ' map-zoomed' : ''}`}
-            style={zoomed ? { 
+            style={zoomed ? {
               transform: `translate(calc(-36% + ${pan.x}px), calc(-50% + ${pan.y}px)) perspective(800px) rotateX(2deg) rotateZ(0deg) scale(${wheelZoom})`,
               cursor: isDragging ? 'grabbing' : 'grab',
               transition: isDragging || wheelZoom > 1 ? 'none' : 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.5s ease'
@@ -75,15 +79,15 @@ export default function Home() {
               dragStart.current = { x: e.clientX - pan.x, y: e.clientY - pan.y };
             }}
             onMouseUp={() => setIsDragging(false)}
-            onMouseLeave={() => { 
-              setZoomed(false); 
-              setWheelZoom(1); 
+            onMouseLeave={() => {
+              setZoomed(false);
+              setWheelZoom(1);
               setIsDragging(false);
               setPan({ x: 0, y: 0 });
-              setTooltip({ show: false, text: '', x: 0, y: 0 }); 
+              setTooltip({ show: false, text: '', x: 0, y: 0 });
             }}
-            onMouseMove={(e) => { 
-              if (tooltip.show) setTooltip(t => ({ ...t, x: e.clientX, y: e.clientY })); 
+            onMouseMove={(e) => {
+              if (tooltip.show) setTooltip(t => ({ ...t, x: e.clientX, y: e.clientY }));
               if (isDragging) {
                 setPan({ x: e.clientX - dragStart.current.x, y: e.clientY - dragStart.current.y });
               }
@@ -116,7 +120,7 @@ export default function Home() {
                     strokeWidth="0.3" rx="0.3" />
                   {/* Side wall */}
                   <polygon
-                    points={`${b.x+b.w},${b.y-1.2} ${b.x+b.w+0.4},${b.y-0.4} ${b.x+b.w+0.4},${b.y+b.h-0.4} ${b.x+b.w},${b.y+b.h-1.2}`}
+                    points={`${b.x + b.w},${b.y - 1.2} ${b.x + b.w + 0.4},${b.y - 0.4} ${b.x + b.w + 0.4},${b.y + b.h - 0.4} ${b.x + b.w},${b.y + b.h - 1.2}`}
                     fill="rgba(0,180,160,0.2)" stroke="rgba(0,229,200,0.3)" strokeWidth="0.2" />
                 </g>
               ))}
@@ -138,7 +142,7 @@ export default function Home() {
       </div>
 
       {/* Right panel slides out dynamically based on map zoom */}
-      <div 
+      <div
         className="right-panel"
         style={{
           transform: zoomed ? `translateX(${120 + (wheelZoom - 1) * 250}px)` : 'translateX(0)',
@@ -164,14 +168,14 @@ export default function Home() {
         </div>
 
         <div className="cta-group">
-  <button
-    type="button"
-    className="explore-btn cta-button primary-button"
-    onClick={handleExploreNavigation}
-  >
-    Explore Campus →
-  </button>
-</div>
+          <button
+            type="button"
+            className="explore-btn cta-button primary-button"
+            onClick={handleExploreNavigation}
+          >
+            Explore Campus →
+          </button>
+        </div>
       </div>
     </div>
   );
