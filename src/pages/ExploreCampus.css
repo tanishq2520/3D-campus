@@ -1,0 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800;900&display=swap');
+
+.explore-root {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #08090d;
+  color: #ffffff;
+  font-family: 'Syne', sans-serif;
+}
+
+.explore-home-btn {
+  position: fixed;
+  top: 1.5rem;
+  left: 2rem;
+  z-index: 110;
+  padding: 0.5rem 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  cursor: pointer;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.explore-home-btn:hover {
+  border-color: #00f5c4;
+  background: rgba(255, 255, 255, 0.1);
+  color: #00f5c4;
+}
+
+.orbital-shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(0, 245, 196, 0.08) 0%, transparent 58%),
+    linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    #ffffff;
+  background-size: auto, 48px 48px, 48px 48px, auto;
+}
+
+.explore-root:has(.orbital-shell) .explore-home-btn {
+  border-color: rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.8);
+  color: #111111;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.orbital-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+}
+
+.orbital-bg-label {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 0;
+  width: 100%;
+  margin: 0;
+  font-family: 'Syne', sans-serif;
+  font-size: 15vw;
+  font-weight: 900;
+  line-height: 0.82;
+  pointer-events: none;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+
+.orbital-noise {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  opacity: 0.03;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.orbital-preview-panel {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  z-index: 50;
+  padding: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(8, 9, 20, 0.85);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.preview-img {
+  display: block;
+  width: 256px;
+  height: 160px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.preview-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  color: #ffffff;
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.preview-badge {
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.orbital-cursor {
+  position: fixed;
+  z-index: 100;
+  width: 48px;
+  height: 48px;
+  border: 1px solid;
+  border-radius: 50%;
+  opacity: 0.4;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.orbital-cursor-dot {
+  position: fixed;
+  z-index: 101;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.orbital-back-btn {
+  position: fixed;
+  top: 1.5rem;
+  right: 2rem;
+  z-index: 100;
+  padding: 0.5rem 1.2rem;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  color: #111111;
+  cursor: pointer;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.orbital-back-btn:hover {
+  border-color: var(--dept-color);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+@media (max-width: 720px) {
+  .explore-home-btn {
+    left: 1rem;
+  }
+
+  .orbital-back-btn {
+    right: 1rem;
+  }
+
+  .orbital-preview-panel {
+    top: 5rem;
+    left: 1rem;
+  }
+
+  .preview-img {
+    width: 220px;
+    height: 138px;
+  }
+}

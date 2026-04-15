@@ -4,6 +4,7 @@ import Home from './components/Home'
 import CampusMap from './components/CampusMap'
 import BuildingViewer from './components/BuildingViewer'
 import CoordinatePicker from './components/CoordinatePicker'
+import ExploreCampus from './pages/ExploreCampus'
 import './index.css'
 
 function CampusMapPage() {
@@ -17,6 +18,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/explore" element={<ExploreCampus />} />
         <Route path="/map" element={<CampusMapPage />} />
         <Route path="/building/:id" element={<BuildingViewer />} />
         <Route path="/picker" element={<CoordinatePicker />} />

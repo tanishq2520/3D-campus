@@ -8,6 +8,10 @@ export default function Home() {
     navigate('/map');
   };
 
+  const handleExploreNavigation = () => {
+    navigate('/explore');
+  };
+
   return (
     <div className="home-container">
       <div className="left-panel">
@@ -57,8 +61,8 @@ export default function Home() {
         </div>
 
         <div className="cta-group">
-          <button type="button" className="cta-button primary-button" onClick={handleMapNavigation}>
-            Explore Campus
+          <button type="button" className="explore-btn" onClick={handleExploreNavigation}>
+            Explore Campus →
           </button>
           <button type="button" className="cta-button outline-button" onClick={handleMapNavigation}>
             View Full Map
