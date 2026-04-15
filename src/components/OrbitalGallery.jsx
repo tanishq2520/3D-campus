@@ -12,21 +12,118 @@ function getDeptImages(dept) {
 
 function createFallbackCanvas(dept) {
   const canvas = document.createElement('canvas');
-  canvas.width = 128;
-  canvas.height = 128;
+  canvas.width = 512;
+  canvas.height = 329;
   const ctx = canvas.getContext('2d');
   ctx.fillStyle = `${dept.color}33`;
-  ctx.fillRect(0, 0, 128, 128);
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = dept.color;
-  ctx.font = 'bold 48px Syne, sans-serif';
+  ctx.font = 'bold 76px Syne, sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(dept.prefix.toUpperCase(), 64, 68);
+  ctx.fillText(dept.prefix.toUpperCase(), canvas.width / 2, canvas.height / 2 + 6);
   return canvas;
 }
 
 function createFallbackDataUrl(dept) {
   return createFallbackCanvas(dept).toDataURL('image/png');
+}
+
+function findVisibleImageBounds(image) {
+  const scanCanvas = document.createElement('canvas');
+  scanCanvas.width = image.naturalWidth || image.width;
+  scanCanvas.height = image.naturalHeight || image.height;
+  const ctx = scanCanvas.getContext('2d', { willReadFrequently: true });
+  ctx.drawImage(image, 0, 0);
+  const { data, width, height } = ctx.getImageData(0, 0, scanCanvas.width, scanCanvas.height);
+  const threshold = 22;
+  const minContentRatio = 0.02;
+
+  const rowHasContent = (y) => {
+    let content = 0;
+    for (let x = 0; x < width; x++) {
+      const index = (y * width + x) * 4;
+      if (data[index] > threshold || data[index + 1] > threshold || data[index + 2] > threshold) {
+        content++;
+      }
+    }
+    return content / width > minContentRatio;
+  };
+
+  const colHasContent = (x) => {
+    let content = 0;
+    for (let y = 0; y < height; y++) {
+      const index = (y * width + x) * 4;
+      if (data[index] > threshold || data[index + 1] > threshold || data[index + 2] > threshold) {
+        content++;
+      }
+    }
+    return content / height > minContentRatio;
+  };
+
+  let top = 0;
+  let bottom = height - 1;
+  let left = 0;
+  let right = width - 1;
+
+  while (top < height - 1 && !rowHasContent(top)) top++;
+  while (bottom > top && !rowHasContent(bottom)) bottom--;
+  while (left < width - 1 && !colHasContent(left)) left++;
+  while (right > left && !colHasContent(right)) right--;
+
+  return {
+    x: left,
+    y: top,
+    width: right - left + 1,
+    height: bottom - top + 1,
+  };
+}
+
+function createCoverCanvasFromImage(image, frameAspect) {
+  const outputWidth = 512;
+  const outputHeight = Math.round(outputWidth / frameAspect);
+  const outputCanvas = document.createElement('canvas');
+  outputCanvas.width = outputWidth;
+  outputCanvas.height = outputHeight;
+  const outputCtx = outputCanvas.getContext('2d');
+  const bounds = findVisibleImageBounds(image);
+  const sourceAspect = bounds.width / bounds.height;
+  let sx = bounds.x;
+  let sy = bounds.y;
+  let sw = bounds.width;
+  let sh = bounds.height;
+
+  if (sourceAspect > frameAspect) {
+    sw = bounds.height * frameAspect;
+    sx = bounds.x + (bounds.width - sw) / 2;
+  } else {
+    sh = bounds.width / frameAspect;
+    sy = bounds.y + (bounds.height - sh) / 2;
+  }
+
+  outputCtx.drawImage(image, sx, sy, sw, sh, 0, 0, outputWidth, outputHeight);
+  return outputCanvas;
+}
+
+function loadCoveredTexture(src, dept, frameAspect, onReady) {
+  const image = new Image();
+  image.onload = () => {
+    const canvas = createCoverCanvasFromImage(image, frameAspect);
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.minFilter = THREE.LinearMipmapLinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+    onReady(texture, canvas.toDataURL('image/jpeg', 0.9));
+  };
+  image.onerror = () => {
+    const canvas = createFallbackCanvas(dept);
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.minFilter = THREE.LinearMipmapLinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+    onReady(texture, canvas.toDataURL('image/png'));
+  };
+  image.src = src;
 }
 
 export default function OrbitalGallery({ dept, onBack }) {
@@ -71,19 +168,15 @@ export default function OrbitalGallery({ dept, onBack }) {
     const cardWidth = 7.0;
     const cardHeight = 4.5;
     const cardGap = 0.5;
+    const cardAspect = cardWidth / cardHeight;
     const geometry = new THREE.PlaneGeometry(cardWidth, cardHeight);
-    const textureLoader = new THREE.TextureLoader();
     const images = getDeptImages(dept);
-    const textures = images.map((src) => {
-      const texture = textureLoader.load(src, undefined, undefined, () => {
-        texture.image = createFallbackCanvas(dept);
-        texture.needsUpdate = true;
-      });
-      texture.colorSpace = THREE.SRGBColorSpace;
-      texture.minFilter = THREE.LinearMipmapLinearFilter;
-      texture.magFilter = THREE.LinearFilter;
-      return texture;
-    });
+    const fallbackCanvas = createFallbackCanvas(dept);
+    const fallbackTexture = new THREE.CanvasTexture(fallbackCanvas);
+    fallbackTexture.colorSpace = THREE.SRGBColorSpace;
+    fallbackTexture.minFilter = THREE.LinearMipmapLinearFilter;
+    fallbackTexture.magFilter = THREE.LinearFilter;
+    const textures = [fallbackTexture];
 
     const ringsConfig = [
       { count: 16, speed: 0.15, direction: 1 },
@@ -106,7 +199,7 @@ export default function OrbitalGallery({ dept, onBack }) {
         const z = config.radius * Math.sin(angle);
         const texIndex = (ringIndex === 0 ? 0 : ringsConfig.slice(0, ringIndex).reduce((sum, ring) => sum + ring.count, 0)) + i;
         const material = new THREE.MeshBasicMaterial({
-          map: textures[texIndex],
+          map: fallbackTexture,
           transparent: true,
           opacity: 1,
           side: THREE.DoubleSide,
@@ -117,7 +210,14 @@ export default function OrbitalGallery({ dept, onBack }) {
         mesh.userData = {
           ringIndex,
           imageUrl: images[texIndex],
+          previewUrl: fallbackPreview,
         };
+        loadCoveredTexture(images[texIndex], dept, cardAspect, (texture, previewUrl) => {
+          textures.push(texture);
+          material.map = texture;
+          material.needsUpdate = true;
+          mesh.userData.previewUrl = previewUrl;
+        });
         group.add(mesh);
         allCards.push(mesh);
         materials.push(material);
@@ -144,7 +244,7 @@ export default function OrbitalGallery({ dept, onBack }) {
 
     const showPreview = (card) => {
       if (!preview || !previewImg) return;
-      previewImg.src = card.userData.imageUrl;
+      previewImg.src = card.userData.previewUrl;
       gsap.to(preview, { opacity: 1, duration: 0.3, ease: 'power2.out' });
     };
 
